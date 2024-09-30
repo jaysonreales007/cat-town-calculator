@@ -16,7 +16,7 @@ function FloofCalculator() {
   const floofsPerDay = numericCats * 8640000 / 100;
   const floofsPerHour = floofsPerDay / 24;
   const floofsPerMinute = floofsPerHour / 60;
-  const floofsPerSecond = floofsPerMinute / 60 / 100;
+  const floofsPerSecond = floofsPerMinute / 60;
 
   const catsPerSecond = floofsPerSecond / 8640000;
   const catsPerMinute = floofsPerMinute / 8640000;

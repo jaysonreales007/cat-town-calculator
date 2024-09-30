@@ -300,7 +300,7 @@ function CatsExchangeRate() {
         ]);
 
         const catsData = catsResponse.data;
-        const ethBalance = parseFloat(catsData.find(item => item.data_name === "eth_balance").data_value) / 1e20;
+        const ethBalance = parseFloat(catsData.find(item => item.data_name === "eth_balance").data_value) / 1e18;
         const floofSupply = parseFloat(catsData.find(item => item.data_name === "market_furballs").data_value);
         const catSupply = parseFloat(catsData.find(item => item.data_name === "total_cats").data_value);
 

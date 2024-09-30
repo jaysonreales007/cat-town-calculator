@@ -416,6 +416,21 @@ function CatsExchangeRate() {
 }
 
 function FloofDisplay({ cats, handleInputChange, floofData }) {
+  const [showModal, setShowModal] = useState(true);
+
+  useEffect(() => {
+    if (showModal) {
+      Swal.fire({
+        title: 'Important Notice',
+        text: 'The CATS conversion is currently incorrect. We are working on fixing this issue.',
+        icon: 'warning',
+        confirmButtonText: 'Understood'
+      }).then(() => {
+        setShowModal(false);
+      });
+    }
+  }, [showModal]);
+
   const formatCatsPerTime = (value) => {
     if (value === 0) return '0.0';
     const [, decimal] = value.toFixed(20).split('.');

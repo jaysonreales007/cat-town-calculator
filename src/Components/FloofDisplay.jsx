@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { FaCopy } from 'react-icons/fa';
 
 import Footer from './Footer';
 
@@ -61,18 +62,43 @@ function DonationOption({ name, icon, address }) {
   );
 }
 
+const copyToClipboard = (text) => {
+  navigator.clipboard.writeText(text).then(() => {
+    Swal.fire({
+      icon: 'success',
+      title: 'Copied!',
+      text: 'Value has been copied to your clipboard.',
+      timer: 2000,
+      showConfirmButton: false,
+      position: 'top-end',
+      toast: true
+    });
+  }).catch(err => {
+    console.error('Failed to copy: ', err);
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Failed to copy value. Please try again.',
+    });
+  });
+};
+
 function EthExchangeRate() {
   const [ethAmount, setEthAmount] = useState('');
-  const [phpAmount, setphpAmount] = useState('');
-  const [ethPrice, setEthPrice] = useState(null);
+  const [usdAmount, setUsdAmount] = useState('');
+  const [phpAmount, setPhpAmount] = useState('');
+  const [ethPrice, setEthPrice] = useState({ usd: null, php: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchEthPrice = async () => {
       try {
-        const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=php');
-        setEthPrice(response.data.ethereum.php);
+        const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd,php');
+        setEthPrice({
+          usd: response.data.ethereum.usd,
+          php: response.data.ethereum.php
+        });
         setLoading(false);
       } catch (err) {
         console.error('Failed to fetch ETH price:', err);
@@ -82,39 +108,29 @@ function EthExchangeRate() {
     };
 
     fetchEthPrice();
-    // Refresh price every 60 seconds
     const intervalId = setInterval(fetchEthPrice, 60000);
-
-    // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
 
   const handleEthChange = (e) => {
     const value = e.target.value;
-    // Only allow non-negative numbers
     if (value === '' || (/^\d*\.?\d*$/.test(value) && parseFloat(value) >= 0)) {
       setEthAmount(value);
-      setphpAmount(value && ethPrice ? (parseFloat(value) * ethPrice).toFixed(2) : '');
+      setUsdAmount(value && ethPrice.usd ? (parseFloat(value) * ethPrice.usd).toFixed(2) : '');
+      setPhpAmount(value && ethPrice.php ? (parseFloat(value) * ethPrice.php).toFixed(2) : '');
     }
   };
 
-  if (loading) {
-    return <div className="bg-white p-4 rounded-lg shadow-md mt-6">Loading $ETH exchange rate...</div>;
-  }
-
-  if (error) {
-    return <div className="bg-white p-4 rounded-lg shadow-md mt-6 text-red-500">{error}</div>;
-  }
+  if (loading) return <div className="bg-white p-4 rounded-lg shadow-md mt-6">Loading $ETH exchange rate...</div>;
+  if (error) return <div className="bg-white p-4 rounded-lg shadow-md mt-6 text-red-500">{error}</div>;
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md mt-6">
       <h3 className="text-2xl font-semibold mb-4 text-blue-600">ETH Exchange Rate</h3>
-      <p className="mb-4">Current $ETH Price: ₱{ethPrice.toFixed(2)}</p>
+      <p className="mb-4">Current $ETH Price: ${ethPrice.usd.toFixed(2)} USD / ₱{ethPrice.php.toFixed(2)} PHP</p>
       <div className="flex flex-col space-y-4">
         <div>
-          <label htmlFor="ethInput" className="block text-sm font-medium text-gray-700 mb-1">
-            Enter ETH amount:
-          </label>
+          <label htmlFor="ethInput" className="block text-sm font-medium text-gray-700 mb-1">Enter ETH amount:</label>
           <input
             id="ethInput"
             type="number"
@@ -125,18 +141,41 @@ function EthExchangeRate() {
             placeholder="0.00"
           />
         </div>
-        <div>
-          <label htmlFor="phpOutput" className="block text-sm font-medium text-gray-700 mb-1">
-            Peso
-          </label>
+        <div className="relative">
+          <label htmlFor="usdOutput" className="block text-sm font-medium text-gray-700 mb-1">USD</label>
+          <input
+            id="usdOutput"
+            type="text"
+            value={usdAmount ? `$${usdAmount}` : ''}
+            disabled
+            className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md pr-10"
+            placeholder="$0.00"
+          />
+          <button 
+            onClick={() => copyToClipboard(usdAmount)}
+            className="absolute right-2 top-8 text-gray-500 hover:text-gray-700"
+            aria-label="Copy USD value"
+          >
+            <FaCopy />
+          </button>
+        </div>
+        <div className="relative">
+          <label htmlFor="phpOutput" className="block text-sm font-medium text-gray-700 mb-1">PHP</label>
           <input
             id="phpOutput"
             type="text"
             value={phpAmount ? `₱${phpAmount}` : ''}
             disabled
-            className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md"
+            className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md pr-10"
             placeholder="₱0.00"
           />
+          <button 
+            onClick={() => copyToClipboard(phpAmount)}
+            className="absolute right-2 top-8 text-gray-500 hover:text-gray-700"
+            aria-label="Copy PHP value"
+          >
+            <FaCopy />
+          </button>
         </div>
       </div>
     </div>
@@ -145,16 +184,20 @@ function EthExchangeRate() {
 
 function KibbleExchangeRate() {
   const [kibbleAmount, setKibbleAmount] = useState('');
-  const [phpAmount, setphpAmount] = useState('');
-  const [kibblePrice, setKibblePrice] = useState(null);
+  const [usdAmount, setUsdAmount] = useState('');
+  const [phpAmount, setPhpAmount] = useState('');
+  const [kibblePrice, setKibblePrice] = useState({ usd: null, php: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchKibblePrice = async () => {
       try {
-        const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=kibble&vs_currencies=php');
-        setKibblePrice(response.data.kibble.php);
+        const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=kibble&vs_currencies=usd,php');
+        setKibblePrice({
+          usd: response.data.kibble.usd,
+          php: response.data.kibble.php
+        });
         setLoading(false);
       } catch (err) {
         console.error('Failed to fetch KIBBLE price:', err);
@@ -164,39 +207,29 @@ function KibbleExchangeRate() {
     };
 
     fetchKibblePrice();
-    // Refresh price every 60 seconds
     const intervalId = setInterval(fetchKibblePrice, 60000);
-
-    // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
 
   const handleKibbleChange = (e) => {
     const value = e.target.value;
-    // Only allow non-negative numbers
     if (value === '' || (/^\d*\.?\d*$/.test(value) && parseFloat(value) >= 0)) {
       setKibbleAmount(value);
-      setphpAmount(value && kibblePrice ? (parseFloat(value) * kibblePrice).toFixed(6) : '');
+      setUsdAmount(value && kibblePrice.usd ? (parseFloat(value) * kibblePrice.usd).toFixed(6) : '');
+      setPhpAmount(value && kibblePrice.php ? (parseFloat(value) * kibblePrice.php).toFixed(6) : '');
     }
   };
 
-  if (loading) {
-    return <div className="bg-white p-4 rounded-lg shadow-md mt-6">Loading $KIBBLE exchange rate...</div>;
-  }
-
-  if (error) {
-    return <div className="bg-white p-4 rounded-lg shadow-md mt-6 text-red-500">{error}</div>;
-  }
+  if (loading) return <div className="bg-white p-4 rounded-lg shadow-md mt-6">Loading $KIBBLE exchange rate...</div>;
+  if (error) return <div className="bg-white p-4 rounded-lg shadow-md mt-6 text-red-500">{error}</div>;
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md mt-6">
       <h3 className="text-2xl font-semibold mb-4 text-orange-600">KIBBLE Exchange Rate</h3>
-      <p className="mb-4">Current $KIBBLE Price: ₱{kibblePrice.toFixed(6)} php</p>
+      <p className="mb-4">Current $KIBBLE Price: ${kibblePrice.usd.toFixed(6)} USD / ₱{kibblePrice.php.toFixed(6)} PHP</p>
       <div className="flex flex-col space-y-4">
         <div>
-          <label htmlFor="kibbleInput" className="block text-sm font-medium text-gray-700 mb-1">
-            Enter $KIBBLE amount:
-          </label>
+          <label htmlFor="kibbleInput" className="block text-sm font-medium text-gray-700 mb-1">Enter $KIBBLE amount:</label>
           <input
             id="kibbleInput"
             type="number"
@@ -207,24 +240,181 @@ function KibbleExchangeRate() {
             placeholder="0.00"
           />
         </div>
-        <div>
-          <label htmlFor="phpOutput" className="block text-sm font-medium text-gray-700 mb-1">
-            Peso
-          </label>
+        <div className="relative">
+          <label htmlFor="usdOutput" className="block text-sm font-medium text-gray-700 mb-1">USD</label>
+          <input
+            id="usdOutput"
+            type="text"
+            value={usdAmount ? `$${usdAmount}` : ''}
+            disabled
+            className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md pr-10"
+            placeholder="$0.00"
+          />
+          <button 
+            onClick={() => copyToClipboard(usdAmount)}
+            className="absolute right-2 top-8 text-gray-500 hover:text-gray-700"
+            aria-label="Copy USD value"
+          >
+            <FaCopy />
+          </button>
+        </div>
+        <div className="relative">
+          <label htmlFor="phpOutput" className="block text-sm font-medium text-gray-700 mb-1">PHP</label>
           <input
             id="phpOutput"
             type="text"
             value={phpAmount ? `₱${phpAmount}` : ''}
             disabled
-            className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md"
+            className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md pr-10"
             placeholder="₱0.00"
           />
+          <button 
+            onClick={() => copyToClipboard(phpAmount)}
+            className="absolute right-2 top-8 text-gray-500 hover:text-gray-700"
+            aria-label="Copy PHP value"
+          >
+            <FaCopy />
+          </button>
         </div>
       </div>
     </div>
   );
 }
- 
+
+function CatsExchangeRate() {
+  const [catsAmount, setCatsAmount] = useState('');
+  const [ethAmount, setEthAmount] = useState('');
+  const [usdAmount, setUsdAmount] = useState('');
+  const [phpAmount, setPhpAmount] = useState('');
+  const [catsPrice, setCatsPrice] = useState(null);
+  const [ethPrice, setEthPrice] = useState({ usd: null, php: null });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const [catsResponse, ethResponse] = await Promise.all([
+          axios.get('https://api.cat.town/v1/town_square'),
+          axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd,php')
+        ]);
+
+        const catsData = catsResponse.data;
+        const ethBalance = parseFloat(catsData.find(item => item.data_name === "eth_balance").data_value) / 1e18;
+        const floofSupply = parseFloat(catsData.find(item => item.data_name === "market_furballs").data_value);
+        const catSupply = parseFloat(catsData.find(item => item.data_name === "total_cats").data_value);
+
+        const price = (10000 * catSupply) / (5000 + ((10000 * floofSupply + 5000 * ethBalance) / ethBalance));
+        setCatsPrice(price);
+
+        setEthPrice({
+          usd: ethResponse.data.ethereum.usd,
+          php: ethResponse.data.ethereum.php
+        });
+
+        setLoading(false);
+      } catch (err) {
+        console.error('Failed to fetch prices:', err);
+        setError('Failed to fetch current prices. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchPrices();
+    const intervalId = setInterval(fetchPrices, 60000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const handleCatsChange = (e) => {
+    const value = e.target.value;
+    if (value === '' || (/^\d*\.?\d*$/.test(value) && parseFloat(value) >= 0)) {
+      setCatsAmount(value);
+      const ethValue = value && catsPrice ? parseFloat(value) * catsPrice : 0;
+      setEthAmount(ethValue.toFixed(6));
+      setUsdAmount(ethValue && ethPrice.usd ? (ethValue * ethPrice.usd).toFixed(2) : '');
+      setPhpAmount(ethValue && ethPrice.php ? (ethValue * ethPrice.php).toFixed(2) : '');
+    }
+  };
+
+  if (loading) return <div className="bg-white p-4 rounded-lg shadow-md mt-6">Loading $CATS exchange rate...</div>;
+  if (error) return <div className="bg-white p-4 rounded-lg shadow-md mt-6 text-red-500">{error}</div>;
+
+  return (
+    <div className="bg-white p-4 rounded-lg shadow-md mt-6">
+      <h3 className="text-2xl font-semibold mb-4 text-purple-600">CATS Exchange Rate</h3>
+      <p className="mb-4">Current $CATS Price: {catsPrice.toFixed(6)} ETH (${(catsPrice * ethPrice.usd).toFixed(2)} USD / ₱{(catsPrice * ethPrice.php).toFixed(2)} PHP)</p>
+      <div className="flex flex-col space-y-4">
+        <div>
+          <label htmlFor="catsInput" className="block text-sm font-medium text-gray-700 mb-1">Enter $CATS amount:</label>
+          <input
+            id="catsInput"
+            type="number"
+            value={catsAmount}
+            min="0"
+            onChange={handleCatsChange}
+            className="w-full p-2 border-2 border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 text-lg"
+            placeholder="0.00"
+          />
+        </div>
+        <div className="relative">
+          <label htmlFor="ethOutput" className="block text-sm font-medium text-gray-700 mb-1">ETH</label>
+          <input
+            id="ethOutput"
+            type="text"
+            value={ethAmount ? `${ethAmount} ETH` : ''}
+            disabled
+            className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md pr-10"
+            placeholder="0.00 ETH"
+          />
+          <button 
+            onClick={() => copyToClipboard(ethAmount)}
+            className="absolute right-2 top-8 text-gray-500 hover:text-gray-700"
+            aria-label="Copy ETH value"
+          >
+            <FaCopy />
+          </button>
+        </div>
+        <div className="relative">
+          <label htmlFor="usdOutput" className="block text-sm font-medium text-gray-700 mb-1">USD</label>
+          <input
+            id="usdOutput"
+            type="text"
+            value={usdAmount ? `$${usdAmount}` : ''}
+            disabled
+            className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md pr-10"
+            placeholder="$0.00"
+          />
+          <button 
+            onClick={() => copyToClipboard(usdAmount)}
+            className="absolute right-2 top-8 text-gray-500 hover:text-gray-700"
+            aria-label="Copy USD value"
+          >
+            <FaCopy />
+          </button>
+        </div>
+        <div className="relative">
+          <label htmlFor="phpOutput" className="block text-sm font-medium text-gray-700 mb-1">PHP</label>
+          <input
+            id="phpOutput"
+            type="text"
+            value={phpAmount ? `₱${phpAmount}` : ''}
+            disabled
+            className="w-full p-2 bg-gray-100 border border-gray-300 rounded-md pr-10"
+            placeholder="₱0.00"
+          />
+          <button 
+            onClick={() => copyToClipboard(phpAmount)}
+            className="absolute right-2 top-8 text-gray-500 hover:text-gray-700"
+            aria-label="Copy PHP value"
+          >
+            <FaCopy />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function FloofDisplay({ cats, handleInputChange, floofData }) {
   const formatCatsPerTime = (value) => {
     if (value === 0) return '0.0';
@@ -282,6 +472,7 @@ function FloofDisplay({ cats, handleInputChange, floofData }) {
       </div>
       <EthExchangeRate />
       <KibbleExchangeRate />
+      <CatsExchangeRate />
       <DonationSection />
       <Footer />
     </div>

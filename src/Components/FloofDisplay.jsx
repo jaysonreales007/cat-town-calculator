@@ -10,13 +10,15 @@ function FloofDisplay({ cats, handleInputChange, floofData }) {
 
   return (
     <div className="p-6 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 rounded-xl shadow-lg">
-      <h1 className="text-4xl font-bold mb-6 text-white text-center">Cat Town FLOOF Calculator</h1>
-      <div className="mb-6 flex justify-center">
-      <img 
-          src="/img/kibble.webp" 
-          alt="Cat Town Logo" 
-          className="w-32 h-32 rounded-full shadow-md animate-flip"
-        />
+      <div className="flex flex-col items-center justify-center">
+        <h1 className="text-4xl font-bold mb-6 text-white text-center">Cat Town FLOOF Calculator</h1>
+        <div className="mb-6 flex justify-center items-center bg-white p-1 rounded-full">
+            <img 
+                src="/img/kibble.png" 
+                alt="Cat Town Logo" 
+                className="w-32 h-32 rounded-full animate-flip"
+                />
+        </div>
       </div>
       <input  
         type="text"

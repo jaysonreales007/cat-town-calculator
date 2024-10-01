@@ -9,7 +9,7 @@ const copyToClipboard = (text) => {
           text: 'Value has been copied to your clipboard.',
           timer: 2000,
           showConfirmButton: false,
-          position: 'top',
+          position: 'top-end',
           toast: true
         });
       } else {
@@ -19,7 +19,7 @@ const copyToClipboard = (text) => {
           text: 'Cannot copy empty value.',
           timer: 2000,
           showConfirmButton: false,
-          position: 'top',
+          position: 'top-end',
           toast: true
         });
       }

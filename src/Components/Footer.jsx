@@ -31,8 +31,8 @@ function Footer() {
             ))}
         </div>
         
-        <div className="mt-2 text-center text-sm text-gray-600">
-                Developed by 0xJayson.eth {currentYear}
+        <div className="mt-4 text-center text-sm text-gray-600 border-t-2 border-gray-300">
+                Developed by 0xJayson.eth
             </div>
         </footer>
     );

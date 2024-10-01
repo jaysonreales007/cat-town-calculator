@@ -35,7 +35,7 @@ function Changelog() {
       <h3 className="text-2xl font-semibold mb-4 text-gray-800">🐱Changelog</h3>
       <button 
         onClick={() => setIsExpanded(!isExpanded)}
-        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors flex items-center"
+        className="mb-4 lg:px-4 lg:py-2 p-3 text-sm lg:text-xl bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors flex items-center"
       >
         {isExpanded ? (
           <>

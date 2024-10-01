@@ -57,7 +57,7 @@ function Changelog() {
             changelogData.map((release, index) => (
               <div key={index} className="border-b border-gray-200 pb-4 last:border-b-0">
                 <h4 className="text-lg font-semibold">Version {release.version} <span className="text-sm font-normal text-gray-600">({release.date})</span></h4>
-                <ul className="mt-2 space-y-1">
+                <ul className="text-lg mt-2 space-y-1">
                   {release.changes.map((change, changeIndex) => (
                     <li key={changeIndex} className="flex items-start">
                       <span className="text-blue-500 mr-2">•</span>

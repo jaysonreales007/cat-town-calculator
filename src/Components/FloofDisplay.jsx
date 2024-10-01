@@ -228,7 +228,7 @@ function CatsExchangeRate() {
         const floofSupply = parseFloat(catsData.find(item => item.data_name === "market_furballs").data_value);
         const catSupply = parseFloat(catsData.find(item => item.data_name === "total_cats").data_value);
 
-        /* const price = (10000 * catSupply) / (5000 + ((10000 * floofSupply + 5000 * ethBalance) / ethBalance)); */
+        /* const price = (30225 * catSupply) / (5000 + ((10000 * floofSupply + 5000 * ethBalance) / ethBalance)); */
         const price = 30225 * catSupply / (5e3 + (1e4 * floofSupply + 5e3 * ethBalance) / ethBalance);
         setCatsPrice(price);
 
@@ -340,7 +340,12 @@ function CatsExchangeRate() {
   );
 }
 
-function FloofDisplay({ cats, handleInputChange, floofData }) {
+function FloofDisplay({ cats, handleInputChange, floofData, boosts, handleBoostChange, boostPercentage }) {
+
+
+  const applyBoost = (value) => {
+    return value * (1 + boostPercentage / 100);
+  };
 
   const formatCatsPerTime = (value) => {
     if (value === 0) return '0.0';
@@ -378,7 +383,41 @@ function FloofDisplay({ cats, handleInputChange, floofData }) {
         className="w-full p-3 mb-6 border-2 border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 text-lg"
         placeholder="How many cats do you have?"
       />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <div className="bg-white p-4 rounded-lg shadow-md">
+        <h3 className="text-2xl font-semibold mb-4 text-green-600">FLOOF Boosts</h3>
+        <div className="space-y-2">
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={boosts.founderPFP}
+              onChange={() => handleBoostChange('founderPFP')}
+              className="form-checkbox h-5 w-5 text-green-600"
+            />
+            <span>Own Founder Collection Profile Picture (+5%)</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={boosts.stake}
+              onChange={() => handleBoostChange('stake')}
+              className="form-checkbox h-5 w-5 text-green-600"
+            />
+            <span>Stake up to 500,000 (+5%)</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={boosts.gachaCollections}
+              onChange={() => handleBoostChange('gachaCollections')}
+              className="form-checkbox h-5 w-5 text-green-600"
+            />
+            <span>Complete and hand in Gacha Collections (+1%)</span>
+          </label>
+        </div>
+        <p className="mt-4 font-bold">Total Boost: {boostPercentage}%</p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="bg-white p-4 rounded-lg shadow-md">
           <h3 className="text-2xl font-semibold mb-4 text-purple-600">😺FLOOFS Generation:</h3>
           <p className="mb-2">FLOOFS per second: <span className="font-bold">{floofData.floofsPerSecond.toFixed(2)}</span></p>

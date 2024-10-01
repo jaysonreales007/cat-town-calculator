@@ -1,8 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FloofDisplay from './FloofDisplay';
 
 function FloofCalculator() {
   const [cats, setCats] = useState('');
+  const [boosts, setBoosts] = useState({
+    founderPFP: false,
+    stake: false,
+    gachaCollections: false,
+  });
+  const [boostPercentage, setBoostPercentage] = useState(0);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -11,9 +17,30 @@ function FloofCalculator() {
     }
   };
 
+  const handleBoostChange = (boost) => {
+    setBoosts(prevBoosts => ({
+      ...prevBoosts,
+      [boost]: !prevBoosts[boost]
+    }));
+  };
+
+  useEffect(() => {
+    let totalBoost = 0;
+    if (boosts.founderPFP) totalBoost += 5;
+    if (boosts.stake) totalBoost += 5;
+    if (boosts.gachaCollections) totalBoost += 1;
+
+    setBoostPercentage(totalBoost);
+  }, [boosts]);
+
+  const applyBoost = (value) => {
+    return value * (1 + boostPercentage / 100);
+  };
+
   const numericCats = parseFloat(cats) || 0;
 
-  const floofsPerDay = numericCats * 8640000 / 100;
+  const baseFloofsPerDay = numericCats * 8640000 / 100;
+  const floofsPerDay = applyBoost(baseFloofsPerDay);
   const floofsPerHour = floofsPerDay / 24;
   const floofsPerMinute = floofsPerHour / 60;
   const floofsPerSecond = floofsPerMinute / 60;
@@ -43,6 +70,9 @@ function FloofCalculator() {
       cats={cats}
       handleInputChange={handleInputChange}
       floofData={floofData}
+      boosts={boosts}
+      handleBoostChange={handleBoostChange}
+      boostPercentage={boostPercentage}
     />
   );
 }

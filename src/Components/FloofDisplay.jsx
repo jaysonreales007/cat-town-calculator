@@ -385,7 +385,7 @@ function FloofDisplay({ cats, handleInputChange, floofData, boosts, handleBoostC
       />
 
       <div className="bg-white p-4 rounded-lg shadow-md">
-        <h3 className="text-2xl font-semibold mb-4 text-green-600">FLOOF Boosts</h3>
+        <h3 className="text-2xl font-semibold mb-4 text-green-600">😸FLOOF Boosts</h3>
         <div className="space-y-2">
           <label className="flex items-center space-x-2">
             <input

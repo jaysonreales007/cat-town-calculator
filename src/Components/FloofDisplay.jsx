@@ -418,15 +418,6 @@ function FloofDisplay({
             <label className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                checked={boosts.stake}
-                onChange={() => handleBoostChange('stake')}
-                className="form-checkbox h-5 w-5 text-green-600"
-              />
-              <span>Stake up to 500,000 (+5%)</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
                 checked={boosts.fanTokenHolder}
                 onChange={() => handleBoostChange('fanTokenHolder')}
                 className="form-checkbox h-5 w-5 text-green-600"

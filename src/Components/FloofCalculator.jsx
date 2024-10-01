@@ -7,7 +7,6 @@ function FloofCalculator() {
 
   const [boosts, setBoosts] = useState({
     founderPFP: false,
-    stake: false,
     fanTokenHolder: false
   });
 
@@ -42,7 +41,6 @@ function FloofCalculator() {
   useEffect(() => {
     let totalBoost = 0;
     if (boosts.founderPFP) totalBoost += 5;
-    if (boosts.stake) totalBoost += 5;
     if (boosts.fanTokenHolder) totalBoost += 1;
 
     setBoostPercentage(totalBoost);

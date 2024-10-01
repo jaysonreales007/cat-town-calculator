@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { FaCopy } from 'react-icons/fa';
+import { FaCopy, FaQuestionCircle } from 'react-icons/fa';
 
 import Footer from './Footer';
 import DonationSection from './DonationSection';
@@ -340,7 +340,20 @@ function CatsExchangeRate() {
   );
 }
 
-function FloofDisplay({ cats, handleInputChange, floofData, boosts, handleBoostChange, boostPercentage }) {
+function FloofDisplay({ 
+  cats, 
+  handleInputChange, 
+  floofData, 
+  boosts, 
+  handleBoostChange, 
+  boostPercentage,
+  lockDuration,
+  handleLockDurationChange,
+  getLockDurationText,
+  calculateEstimatedEarnings,
+  stakeAmount,
+  handleStakeAmountChange
+ }) {
 
 
   const applyBoost = (value) => {
@@ -392,46 +405,39 @@ function FloofDisplay({ cats, handleInputChange, floofData, boosts, handleBoostC
 
       <div className="bg-white p-4 rounded-lg shadow-md">
         <h3 className="text-2xl font-semibold mb-4 text-green-600">😸FLOOF Boosts</h3>
-        <div className="space-y-2">
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={boosts.founderPFP}
-              onChange={() => handleBoostChange('founderPFP')}
-              className="form-checkbox h-5 w-5 text-green-600"
-            />
-            <span>Own Founder Collection Profile Picture (+5%)</span>
-          </label>
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={boosts.stake}
-              onChange={() => handleBoostChange('stake')}
-              className="form-checkbox h-5 w-5 text-green-600"
-            />
-            <span>Stake up to 500,000 (+5%)</span>
-          </label>
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={boosts.fanTokenHolder}
-              onChange={() => handleBoostChange('fanTokenHolder')}
-              className="form-checkbox h-5 w-5 text-green-600"
-            />
-            <span>Fan Token Holder (+1%)</span>
-          </label>
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={boosts.gachaCollections}
-              onChange={() => handleBoostChange('gachaCollections')}
-              className="form-checkbox h-5 w-5 text-green-600"
-            />
-            <span>Complete and hand in Gacha Collections (+1%)</span>
-          </label>
-        </div>
-        <p className="mt-4 font-bold">Total Boost: {boostPercentage}%</p>
+          <div className="space-y-2">
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={boosts.founderPFP}
+                onChange={() => handleBoostChange('founderPFP')}
+                className="form-checkbox h-5 w-5 text-green-600"
+              />
+              <span>Own Founder Collection Profile Picture (+5%)</span>
+            </label>
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={boosts.stake}
+                onChange={() => handleBoostChange('stake')}
+                className="form-checkbox h-5 w-5 text-green-600"
+              />
+              <span>Stake up to 500,000 (+5%)</span>
+            </label>
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={boosts.fanTokenHolder}
+                onChange={() => handleBoostChange('fanTokenHolder')}
+                className="form-checkbox h-5 w-5 text-green-600"
+              />
+              <span>Fan Token Holder (+1%)</span>
+            </label>
+          </div>
+          <p className="mt-4 font-bold">Total Boost: {boostPercentage}%</p>
       </div>
+
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="bg-white p-4 rounded-lg shadow-md">
           <h3 className="text-2xl font-semibold mb-4 text-purple-600">😺FLOOFS Generation:</h3>
@@ -450,6 +456,65 @@ function FloofDisplay({ cats, handleInputChange, floofData, boosts, handleBoostC
           <p>CATS per month: <span className="font-bold">{floofData.catsPerMonth.toFixed(2)}</span></p>
         </div>
       </div>
+
+      {/* Staking Section */}
+      <div className="mt-6 bg-white p-4 rounded-lg shadow-md relative">
+        <h4 className="text-2xl font-semibold mb-3 text-blue-600">🐱 Kibble Staking</h4>
+        <div className="absolute top-4 right-4 group">
+          <FaQuestionCircle className="text-blue-500 hover:text-blue-700 cursor-help" />
+          <div className="absolute right-0 w-64 p-4 mt-2 text-sm bg-white border border-gray-200 rounded shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+            <p className="font-bold mb-2">How to Unlock:</p>
+            <ol className="list-decimal list-inside mb-2">
+              <li>Click the "Unlock" button at the Bank.</li>
+              <li>Wait for the unlock period to end.</li>
+              <li>Example: If locked for 3 days, wait 3 days after unlocking.</li>
+            </ol>
+            <p className="font-bold mb-1">Remember:</p>
+            <ul className="list-disc list-inside">
+              <li>No Take-Backsies: Once you start unlocking, you can't change your mind.</li>
+              <li>Multiplier Remains: Your multiplier stays active during the unlock period, with a decay mechanism in place.</li>
+            </ul>
+          </div>
+        </div>
+        <p className="mb-2">Minimum Stake: 1 KIBBLE (10,000 KIBBLE for 0.1% floof bonus)</p>
+        <p className="mb-4">Stake at the Bank in Town Square for extra rewards!</p>
+        <div className="mb-4">
+          <label htmlFor="stakeAmount" className="block text-sm font-medium text-gray-700 mb-1">
+            Enter stake amount (KIBBLE):
+          </label>
+          <input
+            id="stakeAmount"
+            type="number"
+            value={stakeAmount}
+            onChange={handleStakeAmountChange}
+            className="w-full p-2 border-2 border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-lg"
+            placeholder="0"
+            min="1"
+          />
+        </div>
+        <h5 className="text-lg font-semibold mb-2">Lock Durations & Multipliers:</h5>
+        <div className="space-y-2">
+          {['noLock', '3days', '7days', '30days'].map((duration) => (
+            <label key={duration} className="flex items-center space-x-2">
+              <input
+                type="radio"
+                name="lockDuration"
+                value={duration}
+                checked={lockDuration === duration}
+                onChange={() => handleLockDurationChange(duration)}
+                className="form-radio h-5 w-5 text-blue-600"
+              />
+              <span>{duration === 'noLock' ? 'No Lock (1.0x)' : `${getLockDurationText(duration)} (${duration === '3days' ? '1.25x' : duration === '7days' ? '2.0x' : '3.5x'})`}</span>
+            </label>
+          ))}
+        </div>
+        {lockDuration !== 'noLock' && stakeAmount && parseFloat(stakeAmount) > 0 && (
+          <p className="mt-4 font-bold">
+            Estimated earnings with {getLockDurationText(lockDuration)} lock: <span className='text-green-600'>{calculateEstimatedEarnings(lockDuration)}</span> FLOOFS per day
+          </p>
+        )}
+      </div>
+
       <EthExchangeRate />
       <KibbleExchangeRate />
       <CatsExchangeRate />

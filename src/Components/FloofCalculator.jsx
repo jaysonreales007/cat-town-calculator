@@ -7,6 +7,7 @@ function FloofCalculator() {
     founderPFP: false,
     stake: false,
     gachaCollections: false,
+    fanTokenHolder: false
   });
   const [boostPercentage, setBoostPercentage] = useState(0);
 
@@ -29,7 +30,8 @@ function FloofCalculator() {
     if (boosts.founderPFP) totalBoost += 5;
     if (boosts.stake) totalBoost += 5;
     if (boosts.gachaCollections) totalBoost += 1;
-
+    if (boosts.fanTokenHolder) totalBoost += 1;
+    
     setBoostPercentage(totalBoost);
   }, [boosts]);
 

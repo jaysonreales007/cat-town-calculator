@@ -364,7 +364,13 @@ function FloofDisplay({ cats, handleInputChange, floofData, boosts, handleBoostC
     }
   };
   return (
-    <div className="p-6 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 rounded-xl shadow-lg">
+    <div className="p-6 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 rounded-xl shadow-lg relative overflow-hidden">
+      
+      <span className="absolute inset-x-0 top-0 h-[2px] bg-cyan-400 opacity-0 animate-[neon-flow-h_4s_infinite]"></span>
+      <span className="absolute inset-y-0 right-0 w-[2px] bg-cyan-400 opacity-0 animate-[neon-flow-v_4s_infinite_1s]"></span>
+      <span className="absolute inset-x-0 bottom-0 h-[2px] bg-cyan-400 opacity-0 animate-[neon-flow-h_4s_infinite_2s]"></span>
+      <span className="absolute inset-y-0 left-0 w-[2px] bg-cyan-400 opacity-0 animate-[neon-flow-v_4s_infinite_3s]"></span>
+      
       <div className="flex flex-col items-center justify-center">
         <h1 className="text-4xl font-bold mb-6 text-white text-center">Cat Town FLOOF Calculator</h1>
         <div className="mb-6 flex justify-center items-center bg-white p-1 rounded-full">
@@ -404,6 +410,15 @@ function FloofDisplay({ cats, handleInputChange, floofData, boosts, handleBoostC
               className="form-checkbox h-5 w-5 text-green-600"
             />
             <span>Stake up to 500,000 (+5%)</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={boosts.fanTokenHolder}
+              onChange={() => handleBoostChange('fanTokenHolder')}
+              className="form-checkbox h-5 w-5 text-green-600"
+            />
+            <span>Fan Token Holder (+1%)</span>
           </label>
           <label className="flex items-center space-x-2">
             <input

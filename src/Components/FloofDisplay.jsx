@@ -6,6 +6,7 @@ import { FaCopy } from 'react-icons/fa';
 import Footer from './Footer';
 import DonationSection from './DonationSection';
 import copyToClipboard from './copyToClipboard';
+import Changelog from './Changelog';
 
 function EthExchangeRate() {
   const [ethAmount, setEthAmount] = useState('');
@@ -228,6 +229,7 @@ function CatsExchangeRate() {
         const floofSupply = parseFloat(catsData.find(item => item.data_name === "market_furballs").data_value);
         const catSupply = parseFloat(catsData.find(item => item.data_name === "total_cats").data_value);
 
+        /* const price = (10000 * catSupply) / (5000 + ((10000 * floofSupply + 5000 * ethBalance) / ethBalance)); */
         const price = 30225 * catSupply / (5e3 + (1e4 * floofSupply + 5e3 * ethBalance) / ethBalance);
         setCatsPrice(price);
 
@@ -413,6 +415,7 @@ function FloofDisplay({ cats, handleInputChange, floofData }) {
       <KibbleExchangeRate />
       <CatsExchangeRate />
       <DonationSection />
+      <Changelog />
       <Footer />
     </div>
   );

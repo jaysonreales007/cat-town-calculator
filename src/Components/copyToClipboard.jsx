@@ -9,7 +9,7 @@ const copyToClipboard = (text) => {
           text: 'Value has been copied to your clipboard.',
           timer: 2000,
           showConfirmButton: false,
-          position: 'top-end',
+          position: 'top',
           toast: true
         });
       } else {
@@ -19,12 +19,11 @@ const copyToClipboard = (text) => {
           text: 'Cannot copy empty value.',
           timer: 2000,
           showConfirmButton: false,
-          position: 'top-end',
+          position: 'top',
           toast: true
         });
       }
     }).catch(err => {
-      console.error('Failed to copy: ', err);
       Swal.fire({
         icon: 'error',
         title: 'Oops...',

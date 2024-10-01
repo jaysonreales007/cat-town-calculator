@@ -9,7 +9,9 @@ function Footer() {
         { name: 'GitBook', icon: SiGitbook, url: 'https://docs.cat.town/', color: '#3884FF' },
         { name: 'YouTube', icon: FaYoutube, url: 'https://www.youtube.com/@CatTownOfficial', color: '#FF0000' },
         { name: 'Coinmarketcap', icon: SiCoinmarketcap, url: 'https://www.coingecko.com/en/coins/kibble', color: '#17181B' },
-    ];
+  ];
+  
+  const currentYear = new Date().getFullYear();
   
     return (
         <footer className="mt-8 bg-gray-100 p-4 rounded-lg shadow-md">
@@ -27,6 +29,10 @@ function Footer() {
                 <link.icon className="text-2xl group-hover:animate-bounce" aria-label={link.name} />
                 </a>
             ))}
+        </div>
+        
+        <div className="mt-2 text-center text-sm text-gray-600">
+                Developed by 0xJayson.eth {currentYear}
             </div>
         </footer>
     );

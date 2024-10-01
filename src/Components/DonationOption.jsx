@@ -1,6 +1,7 @@
 import Swal from "sweetalert2";
 
 function DonationOption({ name, icon, address }) {
+    const isMobile = window.innerWidth <= 768;
     const getButtonColor = () => {
       switch (name) {
         case 'Bitcoin': return 'bg-transparent hover:bg-orange-400';
@@ -18,15 +19,16 @@ function DonationOption({ name, icon, address }) {
           text: `${name} address has been copied to your clipboard.`,
           timer: 2000,
           showConfirmButton: false,
-          position: 'top-end',
+          position: isMobile ? 'top' : 'top-end',
           toast: true
         });
       }).catch(err => {
-        console.error('Failed to copy: ', err);
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
           text: 'Failed to copy address. Please try again.',
+          position: isMobile ? 'top' : 'top-end',
+          toast: true
         });
       });
     };

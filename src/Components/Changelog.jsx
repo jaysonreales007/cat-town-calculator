@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { LuArrowRight, LuArrowDown } from "react-icons/lu";
 
 function Changelog() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -12,8 +13,8 @@ function Changelog() {
       try {
         const response = await axios.get('https://api.github.com/repos/jaysonreales007/cat-town-calculator/commits');
 
-        const formattedData = response.data.map(commit => ({
-          version: commit.sha.substring(0, 7),
+        const formattedData = response.data.map((commit, index) => ({
+          version: `1.0.${response.data.length - index}`,
           date: new Date(commit.commit.author.date).toISOString().split('T')[0],
           changes: [commit.commit.message]
         }));
@@ -31,12 +32,20 @@ function Changelog() {
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md mt-6">
-      <h3 className="text-2xl font-semibold mb-4 text-gray-800">Changelog</h3>
+      <h3 className="text-2xl font-semibold mb-4 text-gray-800">🐱Changelog</h3>
       <button 
         onClick={() => setIsExpanded(!isExpanded)}
-        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors flex items-center"
       >
-        {isExpanded ? "Hide Changelog" : "Show Changelog"}
+        {isExpanded ? (
+          <>
+            Hide Changelog <LuArrowDown className="ml-2" />
+          </>
+        ) : (
+          <>
+            Show Changelog <LuArrowRight className="ml-2" />
+          </>
+        )}
       </button>
       {isExpanded && (
         <div className="space-y-4">

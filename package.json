@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@lordicon/react": "^1.10.0",
     "axios": "^1.7.7",
     "big-integer": "^1.6.52",
     "big.js": "^6.2.2",

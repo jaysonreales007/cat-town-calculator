@@ -1,4 +1,3 @@
-import Swal from 'sweetalert2';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { FaCopy } from 'react-icons/fa';
@@ -381,14 +380,14 @@ function FloofDisplay({ cats, handleInputChange, floofData }) {
       />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <h3 className="text-2xl font-semibold mb-4 text-purple-600">FLOOFS Generation:</h3>
+          <h3 className="text-2xl font-semibold mb-4 text-purple-600">😺FLOOFS Generation:</h3>
           <p className="mb-2">FLOOFS per second: <span className="font-bold">{floofData.floofsPerSecond.toFixed(2)}</span></p>
           <p className="mb-2">FLOOFS per minute: <span className="font-bold">{floofData.floofsPerMinute.toFixed(2)}</span></p>
           <p className="mb-2">FLOOFS per hour: <span className="font-bold">{floofData.floofsPerHour.toFixed(2)}</span></p>
           <p>FLOOFS per day: <span className="font-bold">{floofData.floofsPerDay.toFixed(2)}</span></p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <h3 className="text-2xl font-semibold mb-4 text-pink-600">CATS Generation:</h3>
+          <h3 className="text-2xl font-semibold mb-4 text-pink-600">🐈CATS Generation:</h3>
           <p className="mb-2">CATS per second: <span className="font-bold">{formatCatsPerTime(floofData.catsPerSecond)}</span></p>
           <p className="mb-2">CATS per minute: <span className="font-bold">{formatCatsPerTime(floofData.catsPerMinute)}</span></p>
           <p className="mb-2">CATS per hour: <span className="font-bold">{formatCatsPerTime(floofData.catsPerHour)}</span></p>

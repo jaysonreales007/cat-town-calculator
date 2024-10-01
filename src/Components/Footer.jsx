@@ -3,7 +3,7 @@ import { SiGitbook, SiCoinmarketcap } from 'react-icons/si';
 
 function Footer() {
     const socialLinks = [
-        { name: 'Website', icon: FaGlobe, url: 'https://cat.town/', color: '#7289DA' },
+        { name: 'Website', icon: FaGlobe, url: 'https://cat.town/?ref=3c743c3a343a393f386f4934496a3b3b3a3a496a383d3c3c6f6e6a3c3c3e3b3b6f49493f3568353d4f35', color: '#7289DA' },
         { name: 'Twitter', icon: FaTwitter, url: 'https://twitter.com/cattownbase', color: '#1DA1F2' },
         { name: 'Telegram', icon: FaTelegram, url: 'https://t.me/WelcomeToCatTown', color: '#0088cc' },
         { name: 'GitBook', icon: SiGitbook, url: 'https://docs.cat.town/', color: '#3884FF' },
